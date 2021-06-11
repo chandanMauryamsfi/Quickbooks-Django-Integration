@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h4 class = "mt-3">Time Activities</h4>
+ <div>
+    <table class="table table-bordered">
+        <thead >
+            <tr>
+                <th>#</th>
+                <th>Employee Name</th>
+                <th>Txn Date</th>
+                <th>Employee ID</th>
+                <th>Hours</th>
+                <th>Hours Rate</th>
+                <th>Billable Status</th>
+                <th>Name Of</th>
+            </tr>
+        </thead>
+    <tbody>
+                    
+                        {% for activities in data %}
+                        <tr>
+                        <td>{{forloop.counter}}</td>
+                        <td>{{activities.employee_name}}</td>
+                        <td>{{activities.transaction_date}}</td>
+                        <td>{{activities.qb_employee_id}}</td>
+                        <td>{{activities.hours}}</td>
+                        <td>{{activities.hourly_Rate}}</td>
+                        <td>{{activities.billable_Status}}</td>
+                        <td>{{activities.name_of}}</td>
+                        </tr>
+                        {% endfor %}
+                    
+    <tbody>
+    </tabel>
+</div>
+{%endblock%}

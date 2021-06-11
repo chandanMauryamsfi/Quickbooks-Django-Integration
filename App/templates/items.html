@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h4 class = "mt-3">Items</h4>
+ <div>
+    <table class="table table-bordered">
+        <thead >
+            <tr>
+                {% comment %} {% for emps in data %}
+                <th>{{emps}}}</th>
+                {% endfor %} {% endcomment %}
+                <th>#</th>
+                <th>Name</th>
+                <th>Item Id</th>
+            </tr>
+        </thead>
+    <tbody>
+                    
+                        {% for items in data %}
+                        <tr>
+                        <td>{{forloop.counter}}</td>
+                        <td>{{items.name}}</td>
+                        <td>{{items.item_id}}</td>
+                        </tr>
+                        {% endfor %}
+                    
+    <tbody>
+    </tabel>
+</div>
+{%endblock%}

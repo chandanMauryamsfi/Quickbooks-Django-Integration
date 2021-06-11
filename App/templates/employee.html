@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h4 class = "mt-3">Employee's List</h4>
+ <div>
+    <table class="table table-bordered">
+        <thead >
+            <tr>
+                {% comment %} {% for emps in data %}
+                <th>{{emps}}}</th>
+                {% endfor %} {% endcomment %}
+                <th>#</th>
+                <th>Given Name</th>
+                <th>Family Name</th>
+                <th>Employee ID</th>
+                <th>City</th>
+                <th>Postal code</th>
+            </tr>
+        </thead>
+    <tbody>
+                    
+                        {% for emps in data %}
+                        <tr>
+                        <td>{{forloop.counter}}</td>
+                        <td>{{emps.given_Name}}</td>
+                        <td>{{emps.family_Name}}</td>
+                        <td>{{emps.qb_EmpId}}</td>
+                        {% if emps.primaryAddr %}
+                        <td>{{emps.primaryAddr.city}}</td>
+                        <td>{{emps.primaryAddr.postal_Code}}</td>
+                        {% else %}
+                        <td>N.A</td>
+                        <td>N.A</td>
+                        {% endif %}
+                        
+                        </tr>
+                        {% endfor %}
+                    
+    <tbody>
+    </tabel>
+</div>
+{%endblock%}
