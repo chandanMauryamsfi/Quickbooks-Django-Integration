@@ -9,9 +9,10 @@ urlpatterns = [
     path('employee', views.employee, name='employee'),
     path('item', views.items),
     path('timeActivity', views.timeActivity),
-    path('fetchEmployee', views.fetchEmployee),
+    path('fetchData', views.fetchData),
     path('addEmployee', views.addEmployee),
     path('additems', views.addItems),
     path('addTimeActivity', views.addTimeActivity),
-    path('updateTimeActivity', views.updateTimeActivity)
+    path('updateTimeActivity', views.updateTimeActivity),
+    path('refreshToken', views.refresh_token)
 ]

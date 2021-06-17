@@ -1,5 +1,5 @@
-<!doctype html>
 <html lang="en">
+{% load static %}
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -7,20 +7,19 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
-
     <title>Quickbooks online</title>
   </head>
   <body>
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
   <div class="container">
-    <a class="navbar-brand" href="home">Quickbooks</a>
+    <a class="navbar-brand" href="/home">Quickbooks</a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse" id="navbarNav">
       <ul class="navbar-nav ml-auto" style="margin-left : auto" >
         
-        
+        {% if request.user.is_authenticated %}
         <li class="nav-item dropdown">
         <a class="nav-link dropdown-toggle" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
           Employee
@@ -46,17 +45,35 @@
           <a class="dropdown-item" href="item">View Items</a>
           <a class="dropdown-item" href="additems">Add Item</a>
       </li>
+      {% endif %}
+      {% if request.user.is_authenticated %}
+        <li class="nav-item">
+          <a class="nav-link" href="/logout">Logout</a>
+        </li>
+        {%else%}
+        <li class="nav-item">
+          <a class="nav-link" href="/signup">Signup</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/login">Login</a>
+        </li>
+        
+        {% endif %}
       </ul>
     </div>
   </div>
 </nav>
+{% if request.user.is_authenticated %}
 <div class='container mt-5'>
 <a href="/" type="button" class="btn btn-info" role="button">Connect Quickbooks</a>
-<a href="/" type="button" class="btn btn-info" role="button">refresh Token</a>
+<a href="refreshToken" type="button" class="btn btn-info" role="button">Refresh Token</a>
+<a href="/todo" type="button" class="btn btn-info" role="button">Plan Tasks</a>
 </div>
+{% endif %}
+{% comment %} <img src="{% static 'App/example.jpeg' %}" alt="My image"> {% endcomment %}
 <div class='container'>
 {% block content %}
 {% endblock %}
 </div>
-  </body>
+</body>
 </html>

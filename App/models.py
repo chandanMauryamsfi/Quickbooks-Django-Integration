@@ -1,8 +1,8 @@
+from os import path
 from django.db import models
+import uuid
 
 # Create your models here.
-
-
 class PrimaryAddr(models.Model):
     city = models.CharField(max_length=50)
     postal_Code = models.CharField(max_length=10)
@@ -50,3 +50,21 @@ class TimeActivity(models.Model):
 
     def __str__(self):
         return self.employee_name
+
+class Token(models.Model):
+    bearer = models.CharField(max_length=10000)
+
+    def save(self, *args, **kwargs):
+        if self.__class__.objects.count():
+            self.pk = self.__class__.objects.first().pk
+        super().save(*args, **kwargs)
+
+
+
+class Photo(models.Model):
+    uuid = models.UUIDField(
+        primary_key=True, default=uuid.uuid4, editable=False,
+    )
+    created_at = models.DateTimeField(auto_now_add=True) 
+    title = models.CharField(max_length=100)
+    photo = models.ImageField()
