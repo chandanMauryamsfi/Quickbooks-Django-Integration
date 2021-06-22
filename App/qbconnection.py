@@ -12,10 +12,6 @@ class QuickbooksConnection:
     auth_header = {}
     __instance__ = None  
       
-         
-  
-    
-
     def __init__(self):
         #creating for checking single instance
         if QuickbooksConnection.__instance__ is None:
@@ -30,6 +26,7 @@ class QuickbooksConnection:
             environment='sandbox',
             redirect_uri='http://localhost:8000/callback',
         )
+        self.base_url = 'https://sandbox-quickbooks.api.intuit.com'
     
     @staticmethod  
     def get_instance():  

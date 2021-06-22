@@ -20,7 +20,7 @@ class Employee(models.Model):
         PrimaryAddr, on_delete=models.CASCADE, null=True)
 
     def __str__(self):
-        return self.given_Name + self.family_Name
+        return self.given_Name +" "+ self.family_Name
 
 
 class Item(models.Model):
@@ -39,17 +39,16 @@ class TimeActivity(models.Model):
     employee = models.ForeignKey(Employee, on_delete=models.CASCADE, null=True)
     transaction_date = models.DateField()
     hours = models.IntegerField()
-    employee_name = models.CharField(max_length=100)
-    qb_employee_id = models.IntegerField()
     billable_Status = models.CharField(max_length=50)
     hourly_Rate = models.IntegerField()
     time_activity_id = models.IntegerField()
     sync_token = models.IntegerField(default=0)
     name_of = models.CharField(
         max_length=10, choices=name_of_choice, default='Employee')
+    item = models.ForeignKey(Item, on_delete=models.CASCADE ,null=True)
 
     def __str__(self):
-        return self.employee_name
+        return str(self.employee)
 
 class Token(models.Model):
     bearer = models.CharField(max_length=10000)

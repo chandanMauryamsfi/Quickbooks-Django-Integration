@@ -9,13 +9,15 @@ from App import models
 
 
 @shared_task
-def fetch():
+def fetch_qb_data():
     response_emp = getdata('employee')
     response_ta = getdata('time_activity')
     response_item = getdata('item')
     data_emp = json.loads(response_emp.text)
     data_items = json.loads(response_item.text)
     data_ta = json.loads(response_ta.text)
+
+    #fetching employee data from QB
     for employee in data_emp['QueryResponse']['Employee']:
         emp, create = models.Employee.objects.update_or_create(
             given_Name=employee['GivenName'],
@@ -30,29 +32,36 @@ def fetch():
             emp.primaryAddr = addr
         emp.save()
 
+    #fetching Items data from QB
     for items in data_items['QueryResponse']['Item']:
         items_obj, create = models.Item.objects.update_or_create(
             name=items['Name'], item_id=items['Id'])
         items_obj.save()
 
+    #fetching Time_activity data from QB
     for time_activities in data_ta['QueryResponse']['TimeActivity']:
         time_activitie_obj, create = models.TimeActivity.objects.update_or_create(
             transaction_date=time_activities['TxnDate'],
             hours=time_activities['Hours'],
-            qb_employee_id=time_activities['EmployeeRef']['value'],
-            employee_name=time_activities['EmployeeRef']['name'],
             hourly_Rate=time_activities['HourlyRate'],
             billable_Status=time_activities['BillableStatus'],
             time_activity_id=time_activities['Id'],
-            name_of=time_activities['NameOf']
+            name_of=time_activities['NameOf'],
         )
         emp = models.Employee.objects.filter(
             qb_EmpId=time_activities['EmployeeRef']['value'])
         for emps in emp:
-
             time_activitie_obj.employee = emps
             time_activitie_obj.save()
-    return ("Data Fetched")
+            
+        item = models.Item.objects.filter(
+            item_id=time_activities['ItemRef']['value'])
+
+        for items in item:
+            time_activitie_obj.item = items
+            time_activitie_obj.save()
+
+    return ("Data Fetched sucessfully")
 
 
 def getdata(object):
@@ -70,3 +79,4 @@ def getdata(object):
     url = '{0}/v3/company/4620816365171746060/query?query={1}'.format(
             base_url,query)
     return requests.get(url, headers=header)
+

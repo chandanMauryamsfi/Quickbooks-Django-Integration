@@ -47,27 +47,29 @@ class ItemsForm(ModelForm):
 class TimeActivityForm(ModelForm):
     class Meta:
         model = TimeActivity
-        fields = ['name_of', 'employee_name', 'hours', 'hourly_Rate',
-                  'qb_employee_id', 'transaction_date']
+        fields = ['name_of', 'employee', 'hours', 'hourly_Rate',
+                 'transaction_date' , 'item']
         
         widgets = {
+            'employee' : forms.Select(attrs={
+                'class' : 'form-select'
+            }),
             'name_of' : forms.Select(attrs={
                 'class' : 'form-select'
             }),
-            'employee_name' : forms.TextInput(attrs={
-                'class' : 'form-control'
-            }),
+            
             'hours' : forms.TextInput(attrs={
                 'class' : 'form-control'
             }),
             'hourly_Rate' : forms.TextInput(attrs={
                 'class' : 'form-control'
             }),
-            'qb_employee_id' : forms.TextInput(attrs={
-                'class' : 'form-control'
-            }),
+            
             'transaction_date' : forms.TextInput(attrs={
                 'class' : 'form-control'
+            }),
+            'item' : forms.Select(attrs={
+                'class' : 'form-select'
             })
         }
 
@@ -75,25 +77,24 @@ class TimeActivityForm(ModelForm):
 class UpdateTimeActivityForm(ModelForm):
     class Meta:
         model = TimeActivity
-        fields = ['name_of', 'employee_name', 'hours', 'hourly_Rate',
-                  'qb_employee_id', 'transaction_date', 'sync_token', 'time_activity_id']
+        fields = ['name_of','employee','hours', 'hourly_Rate',
+                   'transaction_date', 'sync_token', 'time_activity_id' ,'item']
 
         widgets = {
+            'employee' : forms.Select(attrs={
+                'class' : 'form-select'
+            }),
             'name_of' : forms.Select(attrs={
                 'class' : 'form-select'
             }),
-            'employee_name' : forms.TextInput(attrs={
-                'class' : 'form-control'
-            }),
+            
             'hours' : forms.TextInput(attrs={
                 'class' : 'form-control'
             }),
             'hourly_Rate' : forms.TextInput(attrs={
                 'class' : 'form-control'
             }),
-            'qb_employee_id' : forms.TextInput(attrs={
-                'class' : 'form-control'
-            }),
+            
             'transaction_date' : forms.TextInput(attrs={
                 'class' : 'form-control'
             }),
@@ -102,6 +103,9 @@ class UpdateTimeActivityForm(ModelForm):
             }),
             'time_activity_id' : forms.TextInput(attrs={
                 'class' : 'form-control'
+            }),
+            'item' : forms.Select(attrs={
+                'class' : 'form-select'
             })
             
         }

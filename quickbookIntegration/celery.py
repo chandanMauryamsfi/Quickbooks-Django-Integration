@@ -1,5 +1,4 @@
 import os
-
 from celery import Celery
 from celery.schedules import crontab
 
@@ -8,16 +7,20 @@ os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'quickbookIntegration.settings')
 
 app = Celery('quickbookIntegration' , backend='rpc://')
 
-# Using a string here means the worker doesn't have to serialize
-# the configuration object to child processes.
-# - namespace='CELERY' means all celery-related configuration keys
-#   should have a `CELERY_` prefix.
+
 app.config_from_object('django.conf:settings', namespace='CELERY')
 
 app.conf.beat_schedule = {
-    'every-10-seconds' : {
-        'task' : 'App.tasks.add',
-        'schedule' : crontab(hour=0 , minute=0),
+    'fetching-QB-data' : {
+        'task' : 'App.tasks.fetch',
+        'schedule' : crontab(minute=0 , hour=0),
+    }
+}
+
+app.conf.beat_schedule = {
+    'fetching-QB-data' : {
+        'task' : 'App.tasks.refresh_token',
+        'schedule' : crontab(minute='*/57' , hour='*'),
     }
 }
 

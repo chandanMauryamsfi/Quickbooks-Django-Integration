@@ -42,7 +42,9 @@ INSTALLED_APPS = [
     'django_celery_beat',
     'todoApp',
     'django_db_logger',
-    'storages'
+    'storages',
+    'django_filters',
+    'widget_tweaks'
 ]
 
 MIDDLEWARE = [
@@ -111,7 +113,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Asia/Kolkata'
 
 USE_I18N = True
 
@@ -161,6 +163,9 @@ LOGGING = {
         }
     }
 }
+
+CELERY_ENABLE_UTC = False 
+CELRY_TIMEZONE = 'Asia/Kolkata'
 
 DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
 STATICFILES_STORAGE = 'storages.backends.s3boto3.S3StaticStorage'

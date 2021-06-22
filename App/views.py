@@ -2,15 +2,14 @@ from django.shortcuts import render, redirect
 from intuitlib.enums import Scopes
 from App import qbconnection
 from App import models
+from App import filters
 from App.forms import EmployeeForm, PrimaryAddrForm, ItemsForm, TimeActivityForm, UpdateTimeActivityForm
 import requests
 import logging
-from App.tasks import  fetch
+from App.tasks import  fetch_qb_data
+from django.core.paginator import Paginator
+from App.filters import TImeActivityFilter
 from django.contrib.auth.decorators import login_required
-# Let's use Amazon S3
-
-
-
 
 # getting quickbooks connection object instance from singleton QB class.
 qbconn = qbconnection.QuickbooksConnection.get_instance()
@@ -24,12 +23,15 @@ def index(request):
 
 # redirect callback uri from Quickbooks
 def callback(request):
-    qbconn.auth_code = request.GET.get('code', None)
-    qbconn.realm_id = request.GET.get('realmId', None)
-    request.session['realm_id'] = qbconn.realm_id
-    qbconn.auth_client.get_bearer_token(
-        qbconn.auth_code, realm_id=qbconn.realm_id)
-    qbconn.auth_header = 'Bearer {0}'.format(qbconn.auth_client.access_token)
+    try:
+        qbconn.auth_code = request.GET.get('code', None)
+        qbconn.realm_id = request.GET.get('realmId', None)
+        request.session['realm_id'] = qbconn.realm_id
+        qbconn.auth_client.get_bearer_token(
+            qbconn.auth_code, realm_id=qbconn.realm_id)
+        qbconn.auth_header = 'Bearer {0}'.format(qbconn.auth_client.access_token)
+    except Exception as e:
+        db_logger.exception(e)
     return redirect('employee')
 
 @login_required(login_url='login')
@@ -45,42 +47,62 @@ def refresh_token(request):
         cel = models.Token.objects.create(bearer = qbconn.auth_header)
     return redirect('home')
 
+@login_required(login_url='login')
 def employee(request):
     if(models.Token.objects.all()):
         cel = models.Token.objects.update(bearer = qbconn.auth_header)
     else:
         cel = models.Token.objects.create(bearer = qbconn.auth_header)
     data = models.Employee.objects.all()
+    paginator = Paginator(data, 10) # Show 25 contacts per page.
+
+    page_number = request.GET.get('page')
+    data = paginator.get_page(page_number)
     context = {
         'data': data,
     }
     return render(request, 'employee.html', context=context)
 
+@login_required(login_url='login')
 def items(request):
     data = models.Item.objects.all()
+    paginator = Paginator(data, 10) # Show 25 contacts per page.
+
+    page_number = request.GET.get('page')
+    data = paginator.get_page(page_number)
     context = {
         'data': data
     }
     return render(request, 'items.html', context=context)
 
+@login_required(login_url='login')
 def timeActivity(request):
+    
     data = models.TimeActivity.objects.all()
+    filter = TImeActivityFilter(request.GET, queryset = data)
+    data = filter.qs
+    paginator = Paginator(data, 10) # Show 25 contacts per page.
+    page_number = request.GET.get('page')
+    data = paginator.get_page(page_number)
     context = {
-        'data': data
+        'data': data ,
+        'filter' : filter
     }
     return render(request, 'timeActivities.html', context=context)
 
 #fetch data from Quickbooks online to database at midnight
+@login_required(login_url='login')
 def fetchData(request):
     try:
-        r = fetch.delay()
+        r = fetch_qb_data.delay()
     except Exception as e:
         #logging to the db if exception occurs at fetching data
         db_logger.exception(e)
     
-    return render(request, 'base.html')
+    return redirect('home')
 
 #adds new employee to Quickbooks
+@login_required(login_url='login')
 def addEmployee(request):
     if(request.method == "POST"):
 
@@ -109,6 +131,7 @@ def addEmployee(request):
         return render(request, 'form.html', context=context)
 
 #add new items to Quickbooks
+@login_required(login_url='login')
 def addItems(request):
     if(request.method == "POST"):
         data = {
@@ -127,7 +150,7 @@ def addItems(request):
         requests.post('{0}/v3/company/{1}/item'.format(qbconn.base_url,
                                                        qbconn.realm_id), json=data, headers=qbconn.header())
         # redirecting index.html template
-        redirect('home')
+        return redirect('home')
     else:
         #itemForms from App.forms
         itemsForm = ItemsForm()
@@ -139,6 +162,7 @@ def addItems(request):
         return render(request, 'form.html', context=context)
 
 #Add new timeActivity to Quickbooks using portals
+@login_required(login_url='login')
 def addTimeActivity(request):
     if(request.method == "POST"):
         data = {
@@ -146,8 +170,12 @@ def addTimeActivity(request):
             "Hours": request.POST.get('hours'),
             "HourlyRate": request.POST.get('hourly_Rate'),
             "EmployeeRef": {
-                "name": request.POST.get('employee_name'),
-                "value": request.POST.get('qb_employee_id')
+                "name": models.Employee.objects.get(id = request.POST.get('employee')).given_Name,
+                "value": models.Employee.objects.get(id = request.POST.get('employee')).qb_EmpId
+            },
+            "ItemRef": {
+            "name": models.Item.objects.get(id = request.POST.get('item')).name,
+            "value": models.Item.objects.get(id = request.POST.get('item')).item_id,
             },
             "NameOf": 'Employee'
         }
@@ -165,6 +193,7 @@ def addTimeActivity(request):
         return render(request, 'form.html', context=context)
 
 #update timeActivity post request to Quickbooks
+@login_required(login_url='login')
 def updateTimeActivity(request):
     if(request.method == "POST"):
         d = {
@@ -174,8 +203,12 @@ def updateTimeActivity(request):
             "BillableStatus": "Billable",
             "HourlyRate": request.POST.get('hourly_Rate'),
             "EmployeeRef": {
-                "name":  request.POST.get('employee_name'),
-                "value": request.POST.get('employee_id')
+                "name": models.Employee.objects.get(id = request.POST.get('employee')).given_Name,
+                "value": models.Employee.objects.get(id = request.POST.get('employee')).qb_EmpId
+            },
+            "ItemRef": {
+            "name": models.Item.objects.get(id = request.POST.get('item')).name,
+            "value": models.Item.objects.get(id = request.POST.get('item')).item_id,
             },
             "SyncToken": request.POST.get('sync_token'),
             "Id": request.POST.get('time_activity_id'),

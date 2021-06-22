@@ -3,7 +3,7 @@ from django.urls import path
 from todoApp import views
 
 urlpatterns = [
-    path("todo" , views.index, name="home"),
+    path("todo" , views.index , name='todoPage'),
     path('login/', views.login, name="login"),
     path('signup/', views.signUp, name="signup"),
     path('addTodo/', views.addTodo, name="add-todo"),

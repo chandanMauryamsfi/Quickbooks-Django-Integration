@@ -76,10 +76,11 @@ def addTodo(request):
             todo = form.save(commit=False)
             todo.user = user
             todo.save()
-            return redirect('home')
+            return redirect('todoPage')
         else:
             context = {
-                'form': form
+                'form': form,
+                
             }
             return render(request, "index.html", context=context)
 
@@ -92,7 +93,7 @@ def logout(request):
 
 def deleteTodo(request, id):
     Todo.objects.get(pk=id).delete()
-    return redirect('home')
+    return redirect('todoPage')
 
 
 def changeStatus(request, id, status):
@@ -100,4 +101,4 @@ def changeStatus(request, id, status):
     todo.status = status
     print(todo.status)
     todo.save()
-    return redirect('home')
+    return redirect('todoPage')
