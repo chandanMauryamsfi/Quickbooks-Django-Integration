@@ -1,6 +1,6 @@
 from django import forms
 from django.forms import ModelForm
-from App.models import Employee, Item, PrimaryAddr, TimeActivity
+from Apps.App.models import Employee, Item, PrimaryAddr, TimeActivity
 
 
 class EmployeeForm(ModelForm):

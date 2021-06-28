@@ -1,4 +1,4 @@
-from App import models
+from Apps.App import models
 
 def get_header():
     header = {

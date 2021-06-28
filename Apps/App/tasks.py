@@ -4,9 +4,7 @@ import requests
 from celery import shared_task
 from quickbookIntegration.celery import app
 django.setup()
-from App import models , constants , utils
-
-
+from Apps.App import models , constants , utils
 
 @shared_task
 def fetch_qb_data():

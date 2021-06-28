@@ -1,8 +1,8 @@
 from django.shortcuts import render, HttpResponse, redirect
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth import authenticate, login as loginUser, logout as logoutUser
-from todoApp.forms import TodoForm
-from todoApp.models import Todo
+from Apps.todoApp.forms import TodoForm
+from Apps.todoApp.models import Todo
 from django.contrib.auth.decorators import login_required
 # Create your views here.
 
