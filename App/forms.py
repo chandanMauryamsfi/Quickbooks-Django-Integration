@@ -1,6 +1,7 @@
-from App.models import Employee, Item, PrimaryAddr, TimeActivity
-from django.forms import ModelForm
 from django import forms
+from django.forms import ModelForm
+from App.models import Employee, Item, PrimaryAddr, TimeActivity
+
 
 class EmployeeForm(ModelForm):
 
@@ -107,5 +108,4 @@ class UpdateTimeActivityForm(ModelForm):
             'item' : forms.Select(attrs={
                 'class' : 'form-select'
             })
-            
         }

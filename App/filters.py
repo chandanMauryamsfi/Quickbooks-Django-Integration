@@ -7,9 +7,3 @@ class TImeActivityFilter(django_filters.FilterSet):
     class Meta:
         model = TimeActivity
         fields = ['employee' , 'item']
-
-        widgets = {
-            'employee' : forms.Select(attrs={
-                'class' : 'form-select'
-            }),
-        }

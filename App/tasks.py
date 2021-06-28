@@ -1,23 +1,22 @@
-from quickbookIntegration.celery import app
-from celery import shared_task
+import django
 import json
 import requests
-import django
+from celery import shared_task
+from quickbookIntegration.celery import app
 django.setup()
-from App import models
+from App import models , constants , utils
 
 
 
 @shared_task
 def fetch_qb_data():
-    response_emp = getdata('employee')
-    response_ta = getdata('time_activity')
-    response_item = getdata('item')
+    response_emp = get_response_data('employee')
+    response_ta = get_response_data('time_activity')
+    response_item = get_response_data('item')
     data_emp = json.loads(response_emp.text)
     data_items = json.loads(response_item.text)
     data_ta = json.loads(response_ta.text)
 
-    #fetching employee data from QB
     for employee in data_emp['QueryResponse']['Employee']:
         emp, create = models.Employee.objects.update_or_create(
             given_Name=employee['GivenName'],
@@ -32,13 +31,11 @@ def fetch_qb_data():
             emp.primaryAddr = addr
         emp.save()
 
-    #fetching Items data from QB
     for items in data_items['QueryResponse']['Item']:
         items_obj, create = models.Item.objects.update_or_create(
             name=items['Name'], item_id=items['Id'])
         items_obj.save()
 
-    #fetching Time_activity data from QB
     for time_activities in data_ta['QueryResponse']['TimeActivity']:
         time_activitie_obj, create = models.TimeActivity.objects.update_or_create(
             transaction_date=time_activities['TxnDate'],
@@ -60,23 +57,16 @@ def fetch_qb_data():
         for items in item:
             time_activitie_obj.item = items
             time_activitie_obj.save()
-
     return ("Data Fetched sucessfully")
 
 
-def getdata(object):
+def get_response_data(object):
     if object == 'employee':
         query = 'select * from Employee'
     elif object == 'item':
         query = 'select * from Item'
     elif object == 'time_activity':
         query = 'select * from TimeActivity'
-    base_url = 'https://sandbox-quickbooks.api.intuit.com'
-    header = {
-            'Authorization': models.Token.objects.all()[0].bearer,
-            'Accept': 'application/json'
-        }
     url = '{0}/v3/company/4620816365171746060/query?query={1}'.format(
-            base_url,query)
-    return requests.get(url, headers=header)
-
+            constants.base_url,query)
+    return requests.get(url, headers = utils.get_header())

@@ -1,8 +1,6 @@
 from intuitlib.client import AuthClient
-import requests
 from quickbookIntegration.celery import app
 
-#singleton class to connect with quickbooks
 class QuickbooksConnection:
     auth_code = ''
     realm_id = ''
@@ -30,7 +28,6 @@ class QuickbooksConnection:
     
     @staticmethod  
     def get_instance():  
-       # We define the static method to fetch instance  
         if not QuickbooksConnection.__instance__:  
             QuickbooksConnection()  
         return QuickbooksConnection.__instance__  

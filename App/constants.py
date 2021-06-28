@@ -1,0 +1,1 @@
+base_url = 'https://sandbox-quickbooks.api.intuit.com'

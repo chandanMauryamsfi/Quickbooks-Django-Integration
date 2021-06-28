@@ -167,13 +167,13 @@ LOGGING = {
 CELERY_ENABLE_UTC = False 
 CELRY_TIMEZONE = 'Asia/Kolkata'
 
-DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
-STATICFILES_STORAGE = 'storages.backends.s3boto3.S3StaticStorage'
-AWS_ACCESS_KEY_ID = 'AKIA3365V4CL6KYLRHJM'
-AWS_SECRET_ACCESS_KEY ='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'
-AWS_STORAGE_BUCKET_NAME = 'quickbooks-static'
-AWS_S3_REGION_NAME = 'ap-south-1'
-AWS_DEFAULT_ACL = 'public-read'
+# DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+# STATICFILES_STORAGE = 'storages.backends.s3boto3.S3StaticStorage'
+# AWS_ACCESS_KEY_ID = 'AKIA3365V4CL6KYLRHJM'
+# AWS_SECRET_ACCESS_KEY ='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'
+# AWS_STORAGE_BUCKET_NAME = 'quickbooks-static'
+# AWS_S3_REGION_NAME = 'ap-south-1'
+# AWS_DEFAULT_ACL = 'public-read'
 
 
 
