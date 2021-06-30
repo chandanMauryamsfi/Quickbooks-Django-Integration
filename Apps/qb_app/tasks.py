@@ -5,8 +5,7 @@ import requests
 from celery import shared_task
 
 from quickbookIntegration.celery import app
-from Apps.qb_app.constants import BASE_URL , EMPLOYEE , ITEM , TIME_ACTIVITY
-django.setup()
+from Apps.qb_app.constants import BASE_URL, QUERY_EMPLOYEE, QUERY_ITEM, QUERY_TIME_ACTIVITY
 from Apps.qb_app import models, utils
 
 
@@ -73,11 +72,11 @@ def store_time_activity_data_in_db():
 
 def get_response_data(object):
     if object == 'employee':
-        query = EMPLOYEE
+        query = QUERY_EMPLOYEE
     elif object == 'item':
-        query = ITEM
+        query = QUERY_ITEM
     elif object == 'time_activity':
-        query = TIME_ACTIVITY
+        query = QUERY_TIME_ACTIVITY
     query_url = '{0}/v3/company/4620816365171746060/query?query={1}'.format(
         BASE_URL, query)
     return requests.get(query_url, headers=utils.get_header())

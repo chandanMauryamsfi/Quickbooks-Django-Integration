@@ -10,6 +10,7 @@ QB_ENVIRONMENT = 'sandbox'
 REDIRECT_URL = 'http://localhost:8000/callback'
 
 
-EMPLOYEE = "select * from Employee"
-ITEM = "select * from Item"
-TIME_ACTIVITY = "select * from TimeActivity"
+
+QUERY_EMPLOYEE = "select * from Employee"
+QUERY_ITEM = "select * from Item"
+QUERY_TIME_ACTIVITY = "select * from TimeActivity"
