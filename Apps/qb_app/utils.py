@@ -1,4 +1,5 @@
 from django.core.paginator import Paginator
+
 from Apps.qb_app import models
 
 
