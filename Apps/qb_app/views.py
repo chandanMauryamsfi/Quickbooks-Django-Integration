@@ -9,6 +9,7 @@ from django.shortcuts import render, redirect
 
 from Apps.qb_app import models
 from Apps.qb_app import qbconnection
+from Apps.qb_app.constants import BASE_URL
 from Apps.qb_app.filters import TImeActivityFilter
 from Apps.qb_app.forms import EmployeeForm, ItemsForm, PrimaryAddrForm, TimeActivityForm, UpdateTimeActivityForm
 from Apps.qb_app.tasks import fetch_qb_data_and_store_in_db
@@ -57,7 +58,6 @@ def refresh_token(request):
 
 @login_required(login_url='login')
 def get_employee(request):
-    update_or_create_token()
     employee_data = models.Employee.objects.all()
     paginated_employee_data = set_pagination(
         request=request, model_data=employee_data)
@@ -160,7 +160,7 @@ def add_items(request):
         if(itemsForm.is_valid()):
             data = get_items_dic(request.POST.get)
             try:
-                requests.post('{0}/v3/company/{1}/item'.format(qbconn.base_url,
+                requests.post('{0}/v3/company/{1}/item'.format(BASE_URL,
                                                                qbconn.realm_id), json=data, headers=qbconn.header())
             except Exception as e:
                 return HttpResponse('please connect to quickbooks')
@@ -208,10 +208,10 @@ def add_time_activity(request):
     if(request.method == "POST"):
         time_activity_form = TimeActivityForm(request.POST)
         if time_activity_form.is_valid():
-            data = get_time_activity_dic(model_data=request.POST.get)
+            time_activity_data = get_time_activity_dic(model_data=request.POST.get)
             try:
-                requests.post('{0}/v3/company/{1}/timeactivity'.format(qbconn.base_url,
-                                                                       qbconn.realm_id), json=data, headers=qbconn.header())
+                requests.post('{0}/v3/company/{1}/timeactivity'.format(BASE_URL,
+                                                                       qbconn.realm_id), json=time_activity_data, headers=qbconn.header())
             except Exception as e:
                 return HttpResponse('please connect to quickbooks')
             return redirect('home')
@@ -240,10 +240,10 @@ def get_time_activity_context_data(time_activity_form):
 @login_required(login_url='login')
 def update_time_activity(request):
     if(request.method == "POST"):
-        data = get_time_activity_updated_dic(model_data=request.POST.get)
+        time_activity_update_data = get_time_activity_updated_dic(model_data=request.POST.get)
         try:
-            requests.post('{0}/v3/company/{1}/timeactivity'.format(qbconn.base_url,
-                                                                   qbconn.realm_id), json=data, headers=qbconn.header())
+            requests.post('{0}/v3/company/{1}/timeactivity'.format(BASE_URL,
+                                                                   qbconn.realm_id), json=time_activity_update_data, headers=qbconn.header())
         except Exception as e:
             return HttpResponse('please connect to quickbooks')
         return redirect('home')
