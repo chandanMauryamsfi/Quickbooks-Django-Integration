@@ -1,63 +1,60 @@
 {% extends 'base.html' %}
 {% block content %}
 <div>
-<div class="container pt-4" >
-    <div class="row p-4" style="display : flex">
-    <div class="col-lg-4 shadow  p-0">
-        <div class="alert alert-success"> Add  Todo </div>
-            <div class="p-4">
-                <form method="POST" action="/addTodo/">
-                    {% csrf_token %}
-                    {{form.as_p}}
-                    <hr>
-                    <input type="submit" value="Add" class="btn btn-info">
-                </form>
+    <div class="container pt-4" >
+        <div class="row p-4" style="display : flex">
+            <div class="col-lg-4 shadow  p-0">
+                <div class="alert alert-success"> Add  Todo </div>
+                <div class="p-4">
+                    <form method="POST" action="/addTodo/">
+                        {% csrf_token %}
+                        {{form.as_p}}
+                        <hr>
+                        <input type="submit" value="Add" class="btn btn-info">
+                    </form>
+                </div>
             </div>
-        </div>
-        <div class="col">
-        <div class="border">
-        {% if todos|length == 0 %}
-        <div class="alert alert-info text-center ">
-        <p class="display-6"> NO TODO PRESENT </p>
-        </div>
-        {% else %}
-        <div>
-            <table class="table">
-                <thead >
-                    <tr>
-                        <th>#</th>
-                        <th>Title</th>
-                        <th>Status</th>
-                        <th>Delete</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    
-                        {% for todo in todos %}
-                        <tr>
-                        <td>{{forloop.counter}}</td>
-                        <td>{{todo.title}}</td>
-                        <td>{{todo.status}}</td>
-                        <td><a href="deleteTodo/{{todo.id}}" class="btn btn-danger">delete</a>
-                        {% if todo.status == "C" %}
-                        <a href = "/changeStatus/{{todo.id}}/P" class="btn btn-danger">Pending</a>
-                        {% else %}
-                         <a href = "/changeStatus/{{todo.id}}/C" class="btn btn-success">Completed</a>
-                        {% endif %}
-                        </td>
-                        </tr>
-                        {% endfor %}
-                    
-                <tbody>
-            </tabel>
-        </div>
-        {% endif %}
-        </div>
-</div>
-    </div>
+            <div class="col">
+                <div class="border">
+                {% if todos|length == 0 %}
+                    <div class="alert alert-info text-center ">
+                        <p class="display-6"> NO TODO PRESENT </p>
+                    </div>
+                {% else %}
+                    <div>
+                        <table class="table">
+                            <thead >
+                                <tr>
+                                    <th>#</th>
+                                    <th>Title</th>
+                                    <th>Status</th>
+                                    <th>Delete</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for todo in todos %}
+                                <tr>
+                                    <td>{{forloop.counter}}</td>
+                                    <td>{{todo.title}}</td>
+                                    <td>{{todo.status}}</td>
+                                    <td><a href="deleteTodo/{{todo.id}}" class="btn btn-danger">delete</a>
+                                {% if todo.status == "C" %}
+                                    <a href = "/changeStatus/{{todo.id}}/P" class="btn btn-danger">Pending</a>
+                                {% else %}
+                                    <a href = "/changeStatus/{{todo.id}}/C" class="btn btn-success">Completed</a>
+                                {% endif %}
+                                    </td>
+                                </tr>
+                                {% endfor %}
 
-    
-</div>
+                            <tbody>
+                        </table>
+                    </div>
+                {% endif %}
+                </div>
+            </div>
+        </div>    
+    </div>
 </div>
 {% endblock %}
 

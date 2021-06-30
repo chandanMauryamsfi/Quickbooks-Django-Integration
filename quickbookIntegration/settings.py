@@ -38,7 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'Apps.App',
+    'Apps.qb_app',
     'django_celery_beat',
     'Apps.todoApp',
     'django_db_logger',
@@ -167,6 +167,8 @@ LOGGING = {
 CELERY_ENABLE_UTC = False 
 CELRY_TIMEZONE = 'Asia/Kolkata'
 
+QUICKBOOKS_CLIENT_ID = 'ABUU64LRq5F5qUk8bVw2YzSqTO2tGKvCF3FZl9MteGB3BZdaSI'
+QUICKBOOKS_CLIENT_KEY = '6muTSNyKR8G6pW10dYnyUAZraB7pK9ryN6HBJE3J'
 
 
 

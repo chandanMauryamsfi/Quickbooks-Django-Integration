@@ -1,15 +1,14 @@
 from django.shortcuts import render, HttpResponse, redirect
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth import authenticate, login as loginUser, logout as logoutUser
+from django.contrib.auth.decorators import login_required
+
 from Apps.todoApp.forms import TodoForm
 from Apps.todoApp.models import Todo
-from django.contrib.auth.decorators import login_required
-# Create your views here.
 
 
 @login_required(login_url='login')
 def index(request):
-
     if request.user.is_authenticated:
         form = TodoForm()
         user = request.user
@@ -37,7 +36,6 @@ def login(request):
             if user is not None:
                 loginUser(request, user)
                 return redirect('home')
-
         else:
             context = {
                 "form": form
@@ -45,7 +43,7 @@ def login(request):
             return render(request, "login.html", context=context)
 
 
-def signUp(request):
+def sign_up(request):
     if request.method == "GET":
         form = UserCreationForm()
         context = {
@@ -53,7 +51,6 @@ def signUp(request):
         }
         return render(request, "signup.html", context=context)
     else:
-
         form = UserCreationForm(request.POST)
         context = {
             'form': form
@@ -67,8 +64,7 @@ def signUp(request):
 
 
 @login_required(login_url='login')
-def addTodo(request):
-
+def add_todo(request):
     if request.user.is_authenticated:
         user = request.user
         form = TodoForm(request.POST)
@@ -80,7 +76,6 @@ def addTodo(request):
         else:
             context = {
                 'form': form,
-                
             }
             return render(request, "index.html", context=context)
 
@@ -91,12 +86,12 @@ def logout(request):
     return redirect('login')
 
 
-def deleteTodo(request, id):
+def delete_todo(request, id):
     Todo.objects.get(pk=id).delete()
     return redirect('todoPage')
 
 
-def changeStatus(request, id, status):
+def change_status(request, id, status):
     todo = Todo.objects.get(pk=id)
     todo.status = status
     print(todo.status)
