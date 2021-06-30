@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.urls import path
-from Apps.todoApp import views
+from Apps.todo import views
 
 urlpatterns = [
     path("todo" , views.index , name='todoPage'),

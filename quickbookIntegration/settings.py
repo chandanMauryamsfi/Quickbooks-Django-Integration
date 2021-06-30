@@ -40,7 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'Apps.qb_app',
     'django_celery_beat',
-    'Apps.todoApp',
+    'Apps.todo',
     'django_db_logger',
     'storages',
     'django_filters',

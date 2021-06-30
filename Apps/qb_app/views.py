@@ -57,6 +57,7 @@ def refresh_token(request):
 
 @login_required(login_url='login')
 def get_employee(request):
+    update_or_create_token()
     employee_data = models.Employee.objects.all()
     paginated_employee_data = set_pagination(
         request=request, model_data=employee_data)

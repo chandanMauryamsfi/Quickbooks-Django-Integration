@@ -1,6 +1,6 @@
 from django.forms import ModelForm
 
-from Apps.todoApp.models import Todo
+from Apps.todo.models import Todo
 
 
 class TodoForm(ModelForm):
